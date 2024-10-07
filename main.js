@@ -229,6 +229,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 // Initialize scene, camera, and renderer
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 50, 100);  // Move camera back to see the entire object
 const geometer = new THREE.BufferGeometry();
@@ -343,9 +344,9 @@ function loadModelPart(url, scale, positionY) {
 
 
 // Load different parts of the 3D object
-loadModelPart('model/newbody.stl', diameter, -(Height / 2) + (bottomHeight + bodyHeight));
-loadModelPart('model/newbottom.stl', diameter, -(Height / 2.7) + bottomHeight);
-loadModelPart('model/newtop.stl', diameter, -(Height / 5) + Height);
+loadModelPart('model/body.stl', diameter, -(Height / 8) + (bottomHeight + bodyHeight));
+loadModelPart('model/bottom.stl', diameter, -(Height / 11) + bottomHeight);
+loadModelPart('model/top.stl', diameter, -(Height / 7.3) + Height);
 
 
 // Handle window resizing
