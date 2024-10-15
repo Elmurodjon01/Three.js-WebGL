@@ -62,17 +62,88 @@
 //     //console.log(Height);
 // });
 
+ var scene = null;
+ var camera = null;
+ var renderer = null;
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 
 // Create scene, camera, and renderer
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+
+
+function initLoader() {
+    loader = new THREE.FileLoader();
+    stlLoader = new THREE.STLLoader();
+}
+
+function setupScene() {
+    scene = new THREE.Scene();
+}
+// const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+function setupCamera() {
+    camera = new THREE.PerspectiveCamera(
+        35, // Field of view
+        screen_width / screen_height, // Aspect ratio
+        .1, // Near clip plane
+        10000 // Far clip plane
+    );
+    console.log("delete later Height SU: " + Height);
+    cameraLookAt = new THREE.Vector3(0, (Height / 2) + 1 / Height, 0);
+    cameraDirection = new THREE.Vector3(cameraLookAt.x - cameraPos.x, cameraLookAt.y - cameraPos.y, cameraLookAt.z - cameraPos.z);
+    cameraDirection.normalize();
+    cameraPos.x += cameraDirection.x * -1 * lengthRatio / 2;
+    cameraPos.y += cameraDirection.y * -1 * lengthRatio / 2;
+    cameraPos.z += cameraDirection.z * -1 * lengthRatio / 2;
+    camera.position.set(cameraPos.x, cameraPos.y, cameraPos.z);
+    camera.lookAt(cameraLookAt);
+    scene.add(camera);
+    window.addEventListener('resize', function() {
+        calcScreenSize();
+
+        if (screen_width < screen_height) {
+            screen_height -= (100 * (screen_height / screen_width));
+        }
+
+        camera.aspect = screen_width / screen_height;
+
+        camera.updateProjectionMatrix();
+        renderer.setSize(screen_width - 20, screen_height - 20);
+    });
+}
+
 camera.position.set(0, 0, 200);
 
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+// const renderer = new THREE.WebGLRenderer();
+// renderer.setSize(window.innerWidth, window.innerHeight);
+// document.body.appendChild(renderer.domElement);
+function setupRenderer() {
+    var test_canvas = document.createElement('canvas');
+    var gl = null;
+    try {
+        gl = (test_canvas.getContext("webgl") ||
+            test_canvas.getContext("experimental-webgl")
+        );
+    } catch (e) {}
+
+    if (gl) {
+        renderer = new THREE.WebGLRenderer();
+        console.log('webgl!');
+    } else {
+        renderer = new THREE.CanvasRenderer();
+        console.log('canvas');
+    }
+    test_canvas = undefined;
+
+    calcScreenSize();
+    renderer.setSize(screen_width, screen_height - 60);
+    // renderer.setClearColor(0x777777, 1.0);
+    renderer.setClearColor(0xffffff, 1.0);
+    //renderer.setClearColor(0x7FFFD4, 1.0);
+
+    // where to add the canvas element
+    document.body.appendChild(renderer.domElement);
+}
 
 // Add basic lighting
 const ambientLight = new THREE.AmbientLight(0x404040); // soft white light
