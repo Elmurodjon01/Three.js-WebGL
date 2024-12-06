@@ -1,4 +1,3 @@
-
 ## Run Locally
 
 Clone the project
@@ -13,6 +12,10 @@ Go to the project directory
   cd Three.js-WebGL
 ```
 
+```bash
+  cd portfolio
+```
+
 Install dependencies
 
 ```bash
@@ -24,4 +27,3 @@ Start the server
 ```bash
   npm run dev
 ```
-
